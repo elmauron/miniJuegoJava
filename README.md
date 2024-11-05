@@ -49,14 +49,18 @@ Cada ronda sigue la siguiente secuencia:
 
 ## Instalación y Ejecución
 
-1. # Clonar el repositorio
-git clone https://github.com/elmauron/miniJuegoJava.git
-cd miniJuegoJava/MiniJuegoJava
+1. **Clonar repositorio y moverse al directorio /miniJuegoJava**
+- git clone https://github.com/elmauron/miniJuegoJava.git
+- cd miniJuegoJava
 
-2. # Compilar el proyecto
-javac -cp src -d out src/*.java
+2. **Hacer Build de la aplicación con Gradle**
+- ./gradlew build
 
-3. # Ejecutar el juego
-java -cp out MiniJuegoJavaApplication
+3. **Correr la aplicación usando Gradle**
+- ./gradlew bootRun
+
+## Nota
+Este proyecto fue desarrollado como parte del curso de Programación Java en la UTN.
+
 
 
