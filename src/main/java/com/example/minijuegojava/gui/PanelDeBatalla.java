@@ -13,7 +13,7 @@ public class PanelDeBatalla extends JPanel {
     private JButton comenzarButton;
     private JButton attackButton;
     private JButton serAtacadoButton;
-    int turno = 0;
+    int turno = -1;
 
     public PanelDeBatalla(Frame parentFrame, Carta carta1, Carta carta2) {
         setLayout(new GridLayout(1, 2));

@@ -71,11 +71,10 @@ public class PanelDeEnfrentamiento extends JPanel {
 
                     if (!cartas[j].getPersonaje().isVivo()) {
                         index--;
-                        System.out.println("INDEX DE JUGADOR " + jugador.getNombre() + ": " + index);
                     }
                     if (index == 0) {
                         String winnerName = (i == 0) ? jugadores.get(1).getNombre() : jugadores.get(0).getNombre();
-                        showVictoryPanel(winnerName);
+                        showVictoryPanel(winnerName, jugadores.get(0).getNombre());
                         return;
                     }
 
@@ -111,54 +110,64 @@ public class PanelDeEnfrentamiento extends JPanel {
 
         SwingUtilities.invokeLater(() -> {
             panelDeBatalla.addComenzarButton();
-
-            System.out.println("Ronda " + ronda);
-            System.out.println("Empieza batalla entre " + jugador1.getNombre() + " y " + jugador2.getNombre());
+            SoundPlayer.playSound("Batalla.wav");
+            System.out.println("\n");
+            System.out.println("\n");
+            System.out.println("--------------------> Ronda " + ronda + "<--------------------");
             System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+            System.out.println("Empieza batalla entre " + jugador1.getNombre() + " y " + jugador2.getNombre());
+            System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= \n");
 
-            Jugador primerJugador = Math.random() < 0.5 ? jugador1 : jugador2;
-            Jugador segundoJugador = primerJugador.equals(jugador1) ? jugador2 : jugador1;
+
+
+
+            jugador1.setTurno(Math.random() < 0.5 ? 1 : 2);
+            jugador2.setTurno(jugador1.getTurno() == 1 ? 2 : 1);
+
+
+            System.out.println("El jugador " + jugador1.getNombre() + " tiene el turno " + jugador1.getTurno());
+            System.out.println("El jugador " + jugador2.getNombre() + " tiene el turno " + jugador2.getTurno());
+            System.out.println("\n");
 
             panelDeBatalla.addComenzarButtonListener(e -> {
-                battleLoop(primerJugador, segundoJugador, carta1, carta2);
+                battleLoop(jugador1, jugador2, carta1, carta2);
             });
 
             panelDeBatalla.showBattleDialog();
         });
     }
 
-    private void battleLoop(Jugador primerJugador, Jugador segundoJugador, Carta carta1, Carta carta2) {
-        panelDeBatalla.addComenzarButtonListener(e -> {
-            System.out.println("Comenzando...");
-            panelDeBatalla.sumarTurno(panelDeBatalla.getTurno());
-            handleTurn(primerJugador, segundoJugador, carta1, carta2);
-        });
-
+    private void battleLoop(Jugador jugador1, Jugador jugador2, Carta carta1, Carta carta2) {
+        System.out.println("Comenzando...");
+        panelDeBatalla.sumarTurno(panelDeBatalla.getTurno());
+        handleTurn(jugador1, jugador2, carta1, carta2);
         panelDeBatalla.showBattleDialog();
     }
 
-    private void handleTurn(Jugador primerJugador, Jugador segundoJugador, Carta carta1, Carta carta2) {
-        if (panelDeBatalla.getTurno() % 2 == 0) {
-            // Turno del primer jugador
-            panelDeBatalla.addAttackButton();
-            panelDeBatalla.addAttackButtonListener(e -> {
-                atacar(carta1, carta2, segundoJugador);
-                if (!verificador(carta1, carta2)) {
-                    panelDeBatalla.sumarTurno(panelDeBatalla.getTurno());
-                    handleTurn(primerJugador, segundoJugador, carta1, carta2);
-                }
-            });
-        } else {
-            // Turno del segundo jugador
-            panelDeBatalla.addSerAtacadoButton();
-            panelDeBatalla.addSerAtacadoButtonListener(e -> {
-                serAtacado(carta1, carta2, primerJugador);
-                if (!verificador(carta1, carta2)) {
-                    panelDeBatalla.sumarTurno(panelDeBatalla.getTurno());
-                    handleTurn(primerJugador, segundoJugador, carta1, carta2);
-                }
-            });
-        }
+    private void handleTurn(Jugador jugador1, Jugador jugador2, Carta carta1, Carta carta2) {
+
+            if (jugador1.getTurno() == 1) {     // Primer turno es del USUARIO
+                jugador1.setTurno(2);
+                panelDeBatalla.addAttackButton();
+                panelDeBatalla.addAttackButtonListener(e -> {
+                    atacar(carta1, carta2, jugador1);
+                    if (!verificador(carta1, carta2)) {
+                        panelDeBatalla.sumarTurno(panelDeBatalla.getTurno());
+                        handleTurn(jugador1, jugador2, carta1, carta2);
+                    }
+                });
+
+            } else if (jugador1.getTurno() == 2) {  //Primer turno es de la MAQUINA
+                jugador1.setTurno(1);
+                panelDeBatalla.addSerAtacadoButton();
+                panelDeBatalla.addSerAtacadoButtonListener(e -> {
+                    serAtacado(carta1, carta2, jugador2);
+                    if (!verificador(carta1, carta2)) {
+                        panelDeBatalla.sumarTurno(panelDeBatalla.getTurno());
+                        handleTurn(jugador1, jugador2, carta1, carta2);
+                    }
+                });
+            }
     }
 
     public void atacar(Carta carta1, Carta carta2, Jugador currentJugador) {
@@ -199,6 +208,7 @@ public class PanelDeEnfrentamiento extends JPanel {
             setJugadores(jugadores);
             return true;
         } else if (panelDeBatalla.getTurno() > 13) {
+            SoundPlayer.playSound("Empate.wav");
             JOptionPane.showMessageDialog(panelDeBatalla, "La batalla ha terminado en empate.");
             ronda++;
             panelDeBatalla.closeBattleDialog();
@@ -230,8 +240,6 @@ public class PanelDeEnfrentamiento extends JPanel {
 
         System.out.println(carta1.getPersonaje().getNombre() + " ataca a " + carta2.getPersonaje().getNombre() + " por " + daño + " de daño.");
 
-        daño = daño / 10000;
-
         return daño;
     }
 
@@ -253,11 +261,11 @@ public class PanelDeEnfrentamiento extends JPanel {
         return carta;
     }
 
-    private void showVictoryPanel(String winnerName) {
+    private void showVictoryPanel(String winnerName, String usuarioName) {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         BasicSwingApp mainApp = (BasicSwingApp) topFrame;
         topFrame.getContentPane().removeAll();
-        topFrame.getContentPane().add(new PanelDeVictoria(winnerName, mainApp));
+        topFrame.getContentPane().add(new PanelDeVictoria(winnerName, usuarioName, mainApp));
         topFrame.revalidate();
         topFrame.repaint();
     }

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PanelDeCreacion extends JPanel {
 
@@ -43,16 +44,23 @@ public class PanelDeCreacion extends JPanel {
             }
         });
 
-        // Create a panel and add components to it
+        // Crear un panel y agregar componentes
         setLayout(new BorderLayout());
         JPanel inputPanel = new JPanel();
+        inputPanel.setBackground(new Color(0xE0B65E));
         inputPanel.add(new JLabel("Nombre de Invocador:"));
         inputPanel.add(invocadorNameField);
         inputPanel.add(createPlayersButton);
 
-        // Add input panel and output area to the main panel
+        // Agrego input y output al panel principal
         add(inputPanel, BorderLayout.NORTH);
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
+
+        // Cargo y agrego una imagen al panel
+        JLabel imageLabel = new JLabel();
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("imagenes/fondo.jpg")));
+        imageLabel.setIcon(imageIcon);
+        add(imageLabel, BorderLayout.EAST);
     }
 
     private List<Jugador> creacionDeJugadores(String nombreJugador1) {
@@ -95,6 +103,7 @@ public class PanelDeCreacion extends JPanel {
 
     public static void displayJugadores(JTextArea outputArea, List<Jugador> jugadores) {
         JPanel playersPanel = new JPanel();
+        playersPanel.setBackground(new Color(0xE0B65E));
         playersPanel.setLayout(new GridLayout(jugadores.size(), 1, 10, 10)); // 10px gap between rows
 
         for (Jugador jugador : jugadores) {

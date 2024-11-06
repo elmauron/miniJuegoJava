@@ -5,9 +5,20 @@ import java.awt.*;
 
 public class PanelDeVictoria extends JPanel {
 
-    public PanelDeVictoria(String winnerName, BasicSwingApp mainApp) {
+    public PanelDeVictoria(String winnerName, String ususarioName, BasicSwingApp mainApp) {
         setLayout(new BorderLayout());
         JLabel victoryLabel = new JLabel("¡" + winnerName + " ha ganado la partida!", SwingConstants.CENTER);
+
+        if (winnerName.equals(ususarioName)) {
+            SoundPlayer.playSound("Victory.wav");
+        }
+        else {
+            SoundPlayer.playSound("Perdi.wav");
+        }
+
+        System.out.println("¡" + winnerName + " ha ganado la partida!");
+        System.out.println("><><><><><><><><><><><><><><><><><><><><><");
+        System.out.println("\n \n \n \n");
         victoryLabel.setFont(new Font("Serif", Font.BOLD, 24));
         add(victoryLabel, BorderLayout.CENTER);
 

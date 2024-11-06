@@ -9,11 +9,7 @@ public class Jugador {
     private int partidasGanadas;
     private int partidasPerdidas;
     private Carta[] cartas = new Carta[3];
-    //I want this to hold a max of three cards
-    //I want to be able to add a card to this list
-    //I want to be able to remove a card from this list
-    //I want to be able to see the cards in this list
-
+    private int turno;
 
     public Jugador(String nombre, int partidasGanadas, int partidasPerdidas, Carta[] cartas) {
         this.nombre = nombre;
@@ -80,6 +76,14 @@ public class Jugador {
                 break;
             }
         }
+    }
+
+    public void setTurno(int turno) {
+        this.turno = turno;
+    }
+
+    public int getTurno() {
+        return turno;
     }
 
     @Override
