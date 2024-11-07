@@ -12,6 +12,7 @@ sourceCompatibility = '17'
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
+		vendor = JvmVendorSpec.ADOPTIUM
 	}
 }
 
@@ -21,6 +22,7 @@ repositories {
 	maven {
 		url "https://local.repository1/content/groups/public-maven.dev/"
 	}
+	jcenter()
 }
 
 ext {
@@ -51,3 +53,9 @@ task runApp(type: JavaExec) {
 	main = 'com.example.minijuegojava.gui.BasicSwingApp'
 }
 
+tasks.withType(JavaCompile) {
+	options.fork = true
+	options.forkOptions.executable = javaToolchains.launcherFor {
+		languageVersion = JavaLanguageVersion.of(17)
+	}.get().executablePath.asFile.absolutePath
+}
