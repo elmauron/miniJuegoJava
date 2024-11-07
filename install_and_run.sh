@@ -22,5 +22,6 @@ echo "Building the project..."
 ./gradlew bootJar
 
 # Run the JAR file
+JAR_FILE=$(ls build/libs/*.jar | head -n 1)
 echo "Running the application..."
-java -jar build/libs/your-project-name-0.0.1-SNAPSHOT.jar
+java -jar "$JAR_FILE"
