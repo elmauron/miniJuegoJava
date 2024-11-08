@@ -11,8 +11,7 @@ sourceCompatibility = '17'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-		vendor = JvmVendorSpec.ADOPTIUM
+		languageVersion = JavaLanguageVersion.of(22)
 	}
 }
 
@@ -22,7 +21,6 @@ repositories {
 	maven {
 		url "https://local.repository1/content/groups/public-maven.dev/"
 	}
-	jcenter()
 }
 
 ext {
@@ -44,18 +42,4 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-task runApp(type: JavaExec) {
-	group = 'application'
-	description = 'Run the Spring Boot application'
-	classpath = sourceSets.main.runtimeClasspath
-	main = 'com.example.minijuegojava.gui.BasicSwingApp'
-}
-
-tasks.withType(JavaCompile) {
-	options.fork = true
-	options.forkOptions.executable = javaToolchains.launcherFor {
-		languageVersion = JavaLanguageVersion.of(17)
-	}.get().executablePath.asFile.absolutePath
 }
